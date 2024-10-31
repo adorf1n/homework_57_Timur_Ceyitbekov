@@ -2,61 +2,54 @@
 
 @{
     ViewData["Title"] = "Список задач";
-    
-    var titleFilter = ViewData["TitleFilter"]?.ToString() ?? string.Empty;
-    var priorityFilter = ViewData["PriorityFilter"]?.ToString() ?? string.Empty;
-    var statusFilter = ViewData["StatusFilter"]?.ToString() ?? string.Empty;
-    var dateFrom = ViewData["DateFrom"]?.ToString() ?? string.Empty;
-    var dateTo = ViewData["DateTo"]?.ToString() ?? string.Empty;
-    var descriptionFilter = ViewData["DescriptionFilter"]?.ToString() ?? string.Empty;
 
-    string selectedHigh = priorityFilter == "High" ? "selected" : "";
-    string selectedMedium = priorityFilter == "Medium" ? "selected" : "";
-    string selectedLow = priorityFilter == "Low" ? "selected" : "";
-
-    string selectedOpen = statusFilter == "true" ? "selected" : "";
-    string selectedClosed = statusFilter == "false" ? "selected" : "";
+    var currentPage = (int)(ViewData["CurrentPage"] ?? 1);
+    var totalPages = (int)(ViewData["TotalPages"] ?? 1);
 }
 
 <h1>Список задач</h1>
 
-<form method="get">
-    <p>Заголовок: <input type="text" name="titleFilter" value="@titleFilter" /></p>
-    
-    <p>Дата создания от: <input type="date" name="dateFrom" value="@dateFrom" /></p>
-    <p>Дата создания до: <input type="date" name="dateTo" value="@dateTo" /></p>
-    
-    <p>Описание содержит: <input type="text" name="descriptionFilter" value="@descriptionFilter" /></p>
-    
-    <p>Приоритет:
-    <select name="priorityFilter">
-        <option value="">Все</option>
-        <!option value="High" @(priorityFilter == "High" ? "selected" : "")>Высокий</!option>
-        <!option value="Medium" @(priorityFilter == "Medium" ? "selected" : "")>Средний</!option>
-        <!option value="Low" @(priorityFilter == "Low" ? "selected" : "")>Низкий</!option>
-    </select>
-</p>
+<a asp-action="Create" class="btn btn-primary">Создать задачу</a>
 
-    
+<form method="get">
+    <p>
+        Заголовок:
+        <input type="text" name="titleFilter" value="@ViewData["TitleFilter"]" />
+    </p>
+    <p>Приоритет:
+        <select name="priorityFilter">
+            <option value="">Все</option>
+            <!option value="High" @(ViewData["PriorityFilter"]?.ToString() == "High" ? "selected" : "")>Высокий</!option>
+            <!option value="Medium" @(ViewData["PriorityFilter"]?.ToString() == "Medium" ? "selected" : "")>Средний</!option>
+            <!option value="Low" @(ViewData["PriorityFilter"]?.ToString() == "Low" ? "selected" : "")>Низкий</!option>
+        </select>
+    </p>
     <p>Состояние:
         <select name="statusFilter">
             <option value="">Все</option>
-            <!option value="true" @selectedOpen>Открытая</!option>
-            <!option value="false" @selectedClosed>Закрытая</!option>
+            <!option value="true" @(ViewData["StatusFilter"]?.ToString() == "true" ? "selected" : "")>Открытая</!option>
+            <!option value="false" @(ViewData["StatusFilter"]?.ToString() == "false" ? "selected" : "")>Закрытая</!option>
         </select>
     </p>
-    
-    <input type="submit" value="Применить фильтры" />
+    <p>
+        Дата создания от:
+        <input type="date" name="dateFrom" value="@(ViewData["DateFrom"] is DateTime dateFrom ? dateFrom.ToString("yyyy-MM-dd") : string.Empty)" />
+    </p>
+    <p>
+        Дата создания до:
+        <input type="date" name="dateTo" value="@(ViewData["DateTo"] is DateTime dateTo ? dateTo.ToString("yyyy-MM-dd") : string.Empty)" />
+    </p>
+    <p>
+        Описание:
+        <input type="text" name="descriptionFilter" value="@ViewData["DescriptionFilter"]" />
+    </p>
+    <input type="submit" value="Фильтровать" />
 </form>
 
 <table>
     <thead>
         <tr>
-            <th>
-                <a asp-action="Index" asp-route-titleFilter="@titleFilter" asp-route-descriptionFilter="@descriptionFilter"
-                   asp-route-priorityFilter="@priorityFilter" asp-route-statusFilter="@statusFilter"
-                   asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo">Название</a>
-            </th>
+            <th>Название</th>
             <th>Описание</th>
             <th>Приоритет</th>
             <th>Статус</th>
@@ -70,7 +63,7 @@
             <tr>
                 <td>@task.Title</td>
                 <td>@task.Description</td>
-                <td>@task.Priority</td>
+                <td>@task.Priority.ToString()</td>
                 <td>@(task.IsOpen ? "Открытая" : "Закрытая")</td>
                 <td>@task.CreatedAt.ToShortDateString()</td>
                 <td>
@@ -85,3 +78,27 @@
         }
     </tbody>
 </table>
+
+<div class="pagination">
+    @if (currentPage > 1)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(currentPage - 1)" 
+           asp-route-titleFilter="@ViewData["TitleFilter"]"
+           asp-route-priorityFilter="@ViewData["PriorityFilter"]"
+           asp-route-statusFilter="@ViewData["StatusFilter"]"
+           asp-route-dateFrom="@ViewData["DateFrom"]"
+           asp-route-dateTo="@ViewData["DateTo"]"
+           asp-route-descriptionFilter="@ViewData["DescriptionFilter"]">Предыдущая</a>
+    }
+
+    @if (currentPage < totalPages)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(currentPage + 1)" 
+           asp-route-titleFilter="@ViewData["TitleFilter"]"
+           asp-route-priorityFilter="@ViewData["PriorityFilter"]"
+           asp-route-statusFilter="@ViewData["StatusFilter"]"
+           asp-route-dateFrom="@ViewData["DateFrom"]"
+           asp-route-dateTo="@ViewData["DateTo"]"
+           asp-route-descriptionFilter="@ViewData["DescriptionFilter"]">Следующая</a>
+    }
+</div>

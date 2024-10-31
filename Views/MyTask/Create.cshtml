@@ -1,15 +1,31 @@
 ﻿@model MyTask
 
-<h2>Новая задача</h2>
-@using (Html.BeginForm())
-{
-    <p>Название: @Html.TextBoxFor(m => m.Title)</p>
-    <p>
-        Приоритет:
-        @Html.DropDownListFor(m => m.Priority, new SelectList(Enum.GetValues(typeof(PriorityLevel))))
-    </p>
-    <p>Подробное описание: @Html.TextAreaFor(m => m.Description)</p>
-    <p>Имя исполнителя: @Html.TextBoxFor(m => m.Assignee)</p>
-    <input type="submit" value="Добавить задачу" />
-}
-<a href="@Url.Action("Index", "MyTask")">Вернуться к списку</a>
+<h1>Создать новую задачу</h1>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Название задачи:</label>
+        <input type="text" asp-for="Title" required />
+    </div>
+    <div>
+        <label>Приоритет:</label>
+        <select asp-for="Priority">
+            <option value="High">Высокий</option>
+            <option value="Medium">Средний</option>
+            <option value="Low">Низкий</option>
+        </select>
+    </div>
+    <div>
+        <label>Подробное описание задачи:</label>
+        <textarea asp-for="Description" required></textarea>
+    </div>
+    <div>
+        <label>Имя исполнителя:</label>
+        <input type="text" asp-for="Assignee" required />
+    </div>
+    <div>
+        <input type="submit" value="Создать задачу" />
+    </div>
+</form>
+
+<a asp-action="Index">Назад к списку задач</a>

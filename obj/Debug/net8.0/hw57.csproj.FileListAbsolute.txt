@@ -131,3 +131,4 @@ C:\Users\ad0rfin\Desktop\C# Курс\HW57\hw57\hw57\obj\Debug\net8.0\refint\hw57
 C:\Users\ad0rfin\Desktop\C# Курс\HW57\hw57\hw57\obj\Debug\net8.0\hw57.pdb
 C:\Users\ad0rfin\Desktop\C# Курс\HW57\hw57\hw57\obj\Debug\net8.0\hw57.genruntimeconfig.cache
 C:\Users\ad0rfin\Desktop\C# Курс\HW57\hw57\hw57\obj\Debug\net8.0\ref\hw57.dll
+C:\Users\ad0rfin\Desktop\C# Курс\HW57\hw57\hw57\obj\Debug\net8.0\hw57.sourcelink.json
