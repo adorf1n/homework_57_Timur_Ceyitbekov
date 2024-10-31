@@ -1,0 +1,15 @@
+﻿@model MyTask
+
+<h2>Новая задача</h2>
+@using (Html.BeginForm())
+{
+    <p>Название: @Html.TextBoxFor(m => m.Title)</p>
+    <p>
+        Приоритет:
+        @Html.DropDownListFor(m => m.Priority, new SelectList(Enum.GetValues(typeof(PriorityLevel))))
+    </p>
+    <p>Подробное описание: @Html.TextAreaFor(m => m.Description)</p>
+    <p>Имя исполнителя: @Html.TextBoxFor(m => m.Assignee)</p>
+    <input type="submit" value="Добавить задачу" />
+}
+<a href="@Url.Action("Index", "MyTask")">Вернуться к списку</a>

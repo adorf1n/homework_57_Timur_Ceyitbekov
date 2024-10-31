@@ -1,0 +1,87 @@
+﻿@model IEnumerable<MyTask>
+
+@{
+    ViewData["Title"] = "Список задач";
+    
+    var titleFilter = ViewData["TitleFilter"]?.ToString() ?? string.Empty;
+    var priorityFilter = ViewData["PriorityFilter"]?.ToString() ?? string.Empty;
+    var statusFilter = ViewData["StatusFilter"]?.ToString() ?? string.Empty;
+    var dateFrom = ViewData["DateFrom"]?.ToString() ?? string.Empty;
+    var dateTo = ViewData["DateTo"]?.ToString() ?? string.Empty;
+    var descriptionFilter = ViewData["DescriptionFilter"]?.ToString() ?? string.Empty;
+
+    string selectedHigh = priorityFilter == "High" ? "selected" : "";
+    string selectedMedium = priorityFilter == "Medium" ? "selected" : "";
+    string selectedLow = priorityFilter == "Low" ? "selected" : "";
+
+    string selectedOpen = statusFilter == "true" ? "selected" : "";
+    string selectedClosed = statusFilter == "false" ? "selected" : "";
+}
+
+<h1>Список задач</h1>
+
+<form method="get">
+    <p>Заголовок: <input type="text" name="titleFilter" value="@titleFilter" /></p>
+    
+    <p>Дата создания от: <input type="date" name="dateFrom" value="@dateFrom" /></p>
+    <p>Дата создания до: <input type="date" name="dateTo" value="@dateTo" /></p>
+    
+    <p>Описание содержит: <input type="text" name="descriptionFilter" value="@descriptionFilter" /></p>
+    
+    <p>Приоритет:
+    <select name="priorityFilter">
+        <option value="">Все</option>
+        <!option value="High" @(priorityFilter == "High" ? "selected" : "")>Высокий</!option>
+        <!option value="Medium" @(priorityFilter == "Medium" ? "selected" : "")>Средний</!option>
+        <!option value="Low" @(priorityFilter == "Low" ? "selected" : "")>Низкий</!option>
+    </select>
+</p>
+
+    
+    <p>Состояние:
+        <select name="statusFilter">
+            <option value="">Все</option>
+            <!option value="true" @selectedOpen>Открытая</!option>
+            <!option value="false" @selectedClosed>Закрытая</!option>
+        </select>
+    </p>
+    
+    <input type="submit" value="Применить фильтры" />
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-titleFilter="@titleFilter" asp-route-descriptionFilter="@descriptionFilter"
+                   asp-route-priorityFilter="@priorityFilter" asp-route-statusFilter="@statusFilter"
+                   asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo">Название</a>
+            </th>
+            <th>Описание</th>
+            <th>Приоритет</th>
+            <th>Статус</th>
+            <th>Дата создания</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.Priority</td>
+                <td>@(task.IsOpen ? "Открытая" : "Закрытая")</td>
+                <td>@task.CreatedAt.ToShortDateString()</td>
+                <td>
+                    @if (task.IsOpen)
+                    {
+                        <form asp-action="Close" asp-route-id="@task.Id" method="post" style="display:inline;">
+                            <input type="submit" value="Закрыть задачу" />
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,18 @@
+﻿@model MyTask
+
+<h2>Детали задачи</h2>
+
+<p><strong>Название:</strong> @Model.Title</p>
+<p><strong>Описание:</strong> @Model.Description</p>
+<p><strong>Приоритет:</strong> @Model.Priority</p>
+<p><strong>Дата создания:</strong> @Model.CreatedAt.ToString("yyyy-MM-dd")</p>
+@if (Model.IsOpen)
+{
+    <p><strong>Дата открытия:</strong> @Model.CreatedAt.ToString("yyyy-MM-dd")</p>
+}
+else
+{
+    <p><strong>Дата закрытия:</strong> @Model.ClosedAt?.ToString("yyyy-MM-dd")</p>
+}
+
+<a href="@Url.Action("Index", "MyTask")">Назад к списку</a>
